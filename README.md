@@ -86,3 +86,5 @@ terraform plan
 terraform apply
 
 ```
+
+![Terminal screen output](./pictures/screen.gif)
