@@ -6,7 +6,7 @@ resource "random_pet" "rp" {
 # Create the resource group in which we will deploy the App Service
 resource "azurerm_resource_group" "rg" {
   name     = "myResourceGroup-${random_pet.rp.id}"
-  location = "eastus"
+  location = "westeurope"
 }
 
 # Create the Linux App Service Plan
@@ -33,4 +33,16 @@ resource "azurerm_app_service" "webapp" {
     manual_integration = true
     use_mercurial      = false
   }
+}
+
+output "rg" {
+  value = azurerm_resource_group.rg.name
+}
+
+output "serviceplan" {
+  value = azurerm_app_service_plan.appserviceplan.sku
+}
+
+output "appservicename" {
+  value = azurerm_app_service.webapp.name
 }
