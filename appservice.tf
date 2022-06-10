@@ -6,23 +6,23 @@ resource "random_pet" "rp" {
 # Create the resource group in which we will deploy the App Service
 resource "azurerm_resource_group" "rg" {
   name     = "myResourceGroup-${random_pet.rp.id}"
-  location = "westeurope"
+  location = var.location
 }
 
 # Create the Linux App Service Plan
 resource "azurerm_app_service_plan" "appserviceplan" {
-  name                = "webapp-asp-${random_pet.rp.id}"
+  name                = "${var.prefix}-${random_pet.rp.id}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku {
-    tier = "Free"
-    size = "F1"
+    tier = var.app_service_tier
+    size = var.app_service_size
   }
 }
 
 # Create the web app, pass in the App Service Plan ID, and deploy code from a public GitHub repo
 resource "azurerm_app_service" "webapp" {
-  name                = "webapp-${random_pet.rp.id}"
+  name                = "${var.prefix}-${random_pet.rp.id}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.appserviceplan.id
@@ -35,14 +35,4 @@ resource "azurerm_app_service" "webapp" {
   }
 }
 
-output "rg" {
-  value = azurerm_resource_group.rg.name
-}
 
-output "serviceplan" {
-  value = azurerm_app_service_plan.appserviceplan.sku
-}
-
-output "appservicename" {
-  value = azurerm_app_service.webapp.name
-}
