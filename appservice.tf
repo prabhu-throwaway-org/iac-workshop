@@ -1,20 +1,20 @@
 # Generate a random pet name to create a globally unique name for the App Service
-resource "random_pet" "rp" {
+resource "random_pet" "unique_name" {
   length = 2
 }
 
 # Create the resource group in which we will deploy the App Service
-resource "azurerm_resource_group" "rg" {
-  name = "myResourceGroup-${random_pet.rp.id}"
+resource "azurerm_resource_group" "demo" {
+  name = "terraform-demo-rg"
   #location = var.location
   location = "westeurope"
 }
 
 # Create the Linux App Service Plan
-resource "azurerm_app_service_plan" "appserviceplan" {
-  name                = "webapp-${random_pet.rp.id}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+resource "azurerm_app_service_plan" "demo" {
+  name                = "terraform-demo-plan"
+  location            = azurerm_resource_group.demo.location
+  resource_group_name = azurerm_resource_group.demo.name
   # sku {
   #   tier = var.app_service_tier
   #   size = var.app_service_size
@@ -27,10 +27,10 @@ resource "azurerm_app_service_plan" "appserviceplan" {
 
 # Create the web app, pass in the App Service Plan ID, and deploy code from a public GitHub repo
 resource "azurerm_app_service" "webapp" {
-  name                = "webapp-${random_pet.rp.id}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.appserviceplan.id
+  name                = "webapp-${random_pet.unique_name.id}"
+  location            = azurerm_resource_group.demo.location
+  resource_group_name = azurerm_resource_group.demo.name
+  app_service_plan_id = azurerm_app_service_plan.demo.id
   https_only          = true
   source_control {
     repo_url           = "https://github.com/Azure-Samples/nodejs-docs-hello-world"
@@ -49,7 +49,7 @@ output "rg" {
 
 # Setting output for app service plan
 output "appservice_serviceplan" {
-  value = azurerm_app_service_plan.appserviceplan.sku
+  value = azurerm_app_service_plan.demo.sku
 }
 
 # Setting output for app service name
