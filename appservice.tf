@@ -31,7 +31,7 @@ resource "azurerm_app_service" "webapp" {
   location            = azurerm_resource_group.demo.location
   resource_group_name = azurerm_resource_group.demo.name
   app_service_plan_id = azurerm_app_service_plan.demo.id
-  https_only          = true
+  https_only          = true # This needs to be enableb to comply with policys applied on CDx Sandboxes
   source_control {
     repo_url           = "https://github.com/Azure-Samples/nodejs-docs-hello-world"
     branch             = "master"
