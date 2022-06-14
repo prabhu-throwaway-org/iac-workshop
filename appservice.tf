@@ -44,7 +44,7 @@ resource "azurerm_app_service" "webapp" {
 
 # Setting output for resource group
 output "rg" {
-  value = azurerm_resource_group.rg.name
+  value = azurerm_resource_group.demo.name
 }
 
 # Setting output for app service plan
